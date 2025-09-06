@@ -384,7 +384,14 @@ TITLE: "${title}"
 AUTHOR: "${author}"
 CHARACTERS: Feature the main characters: ${characterPromptPart}.
 INSTRUCTIONS: Create a compelling cover image. Generate ONLY the image.`;
-    const titleImage = await generatePageImage(titlePagePrompt);
+    
+    let titleImage: string;
+    try {
+        titleImage = await generatePageImage(titlePagePrompt);
+    } catch (error) {
+        console.warn('Title page generation failed, retrying once...', error);
+        titleImage = await generatePageImage(titlePagePrompt);
+    }
     allImages.push(titleImage);
 
 
@@ -420,7 +427,13 @@ FINAL INSTRUCTIONS: Arrange panels dynamically. Place dialogue in speech bubbles
         
         // Pass the last generated image as a reference for consistency
         const previousImage = allImages[allImages.length - 1];
-        const pageImage = await generatePageImage(pagePrompt, previousImage, page, style);
+        let pageImage: string;
+        try {
+            pageImage = await generatePageImage(pagePrompt, previousImage, page, style);
+        } catch (error) {
+            console.warn(`Page ${page.pageNumber} generation failed, retrying once...`, error);
+            pageImage = await generatePageImage(pagePrompt, previousImage, page, style);
+        }
         allImages.push(pageImage);
     }
 
@@ -435,7 +448,13 @@ INSTRUCTIONS: The page should feel like a conclusion. Maybe a character looking 
     
     // Pass the last content page as reference for the conclusion
     const lastContentPage = allImages[allImages.length - 1];
-    const conclusionImage = await generatePageImage(conclusionPagePrompt, lastContentPage);
+    let conclusionImage: string;
+    try {
+        conclusionImage = await generatePageImage(conclusionPagePrompt, lastContentPage);
+    } catch (error) {
+        console.warn('Conclusion page generation failed, retrying once...', error);
+        conclusionImage = await generatePageImage(conclusionPagePrompt, lastContentPage);
+    }
     allImages.push(conclusionImage);
 
     updateProgress({ isLoading: true, message: 'Finishing up...', progress: 100 });
