@@ -1,8 +1,8 @@
 import { GoogleGenAI, Type, Modality } from "@google/genai";
 import type { LoadingState, MangaPage, CharacterProfile, MangaStyle } from '../types';
 
-// Initialize the GoogleGenAI client with the correct environment variable
-const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY });
+// Initialize GoogleGenAI client - will be created dynamically with user's API key
+let ai: GoogleGenAI;
 
 interface StoryDetails {
     title: string;
@@ -344,8 +344,11 @@ const generatePageImage = async (prompt: string, previousPageImage?: string, pag
  */
 export const generateMangaScriptAndImages = async (
     storyDetails: StoryDetails,
-    updateProgress: (state: LoadingState) => void
+    updateProgress: (state: LoadingState) => void,
+    apiKey: string
 ): Promise<string[]> => {
+    // Initialize AI client with user's API key
+    ai = new GoogleGenAI({ apiKey });
     const { title, story, author, style } = storyDetails;
     const allImages: string[] = [];
 

@@ -1,11 +1,13 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import StoryInput from './components/StoryInput';
 import LoadingIndicator from './components/LoadingIndicator';
 import ComicPreview from './components/ComicPreview';
+import ApiKeySetup from './components/ApiKeySetup';
 import { generateMangaScriptAndImages } from './services/geminiService';
 import type { MangaStyle, LoadingState } from './types';
 
 function App() {
+    const [apiKey, setApiKey] = useState<string>('');
     const [title, setTitle] = useState('');
     const [story, setStory] = useState('');
     const [author, setAuthor] = useState('');
@@ -13,6 +15,14 @@ function App() {
     const [loadingState, setLoadingState] = useState<LoadingState>({ isLoading: false, message: '', progress: 0 });
     const [generatedImages, setGeneratedImages] = useState<string[]>([]);
     const [error, setError] = useState<string | null>(null);
+
+    // Check for stored API key on component mount
+    useEffect(() => {
+        const storedApiKey = localStorage.getItem('gemini_api_key');
+        if (storedApiKey) {
+            setApiKey(storedApiKey);
+        }
+    }, []);
 
     const handleGenerate = useCallback(async () => {
         if (!title.trim() || !story.trim() || !author.trim()) return;
@@ -24,7 +34,8 @@ function App() {
         try {
             const images = await generateMangaScriptAndImages(
                 { title, story, author, style },
-                (progressUpdate) => setLoadingState(progressUpdate)
+                (progressUpdate) => setLoadingState(progressUpdate),
+                apiKey
             );
             setGeneratedImages(images);
         } catch (err) {
@@ -46,7 +57,16 @@ function App() {
         setLoadingState({ isLoading: false, message: '', progress: 0 });
     }, []);
 
+    const handleApiKeySet = useCallback((newApiKey: string) => {
+        setApiKey(newApiKey);
+    }, []);
+
     const renderContent = () => {
+        // Show API key setup if no key is available
+        if (!apiKey) {
+            return <ApiKeySetup onApiKeySet={handleApiKeySet} />;
+        }
+        
         if (loadingState.isLoading) {
             return <LoadingIndicator loadingState={loadingState} />;
         }

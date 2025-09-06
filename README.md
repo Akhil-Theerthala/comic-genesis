@@ -47,24 +47,41 @@ A professional AI-powered comic book generator that transforms story ideas into 
    npm install
    ```
 
-3. **Configure API Key:**
-   ```bash
-   # Copy the example environment file
-   cp .env.example .env.local
-   
-   # Edit .env.local and add your Gemini API key
-   VITE_GEMINI_API_KEY=your_actual_api_key_here
-   ```
-
-4. **Run the development server:**
+3. **Run the development server:**
    ```bash
    npm run dev
    ```
 
-5. **Open your browser:**
+4. **Open your browser:**
    Navigate to `http://localhost:5173/`
 
-## 🚀 Production Build
+5. **Get your API key:**
+   - The app will prompt you to enter your Gemini API key
+   - Get one free at [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Your key is stored locally and never sent to our servers
+
+## 🚀 GitHub Pages Deployment
+
+### Deploy to GitHub Pages:
+
+1. **Update package.json homepage** (replace with your GitHub username):
+   ```json
+   "homepage": "https://YOUR_USERNAME.github.io/comic-book-generator-2"
+   ```
+
+2. **Deploy to GitHub Pages:**
+   ```bash
+   npm run deploy
+   ```
+
+3. **Enable GitHub Pages:**
+   - Go to your GitHub repository settings
+   - Scroll to "Pages" section
+   - Select source: "Deploy from a branch"
+   - Select branch: "gh-pages"
+   - Your app will be live at: `https://YOUR_USERNAME.github.io/comic-book-generator-2`
+
+### Local Production Build:
 
 ```bash
 # Build for production
