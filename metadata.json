@@ -1,0 +1,5 @@
+{
+  "name": "Comic Book Generator",
+  "description": "An application that takes a user's story as input and uses AI to generate a multi-page comic book, which can be downloaded as a PDF.",
+  "requestFramePermissions": []
+}
